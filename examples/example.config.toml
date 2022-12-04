@@ -1,0 +1,21 @@
+conda = "/work/software/conda3/"
+
+[minimap2]
+PATH = "/work/software/minimap2/bin"
+
+[hts]
+conda = "/work/software/hts/hts-conda3"
+
+[smrtlink_v11]
+PATH = "/work/smrtlink11/"
+TMPDIR = "$(pwd)"
+
+[samtools]
+require = ["hts"]
+
+[bctools]
+require = ["hts"]
+
+[variants_detection_scripts]
+require = ["smrtlink_v11"]
+PATH = "/work/pipeline/variants_detection/scripts"
