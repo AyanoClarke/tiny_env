@@ -6,6 +6,7 @@ use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
 use toml;
+use std::env;
 
 #[derive(Parser)]
 #[command(author, version, about, arg_required_else_help = true)]
@@ -151,8 +152,15 @@ fn main() {
     }
     // output other environments
     for key in envs.keys() {
-        outf.write_all(format!("export {}={}:${}\n", key, envs.get(key).unwrap(), key).as_bytes())
-            .unwrap();
-        log::debug!("export {}={}:${}", key, envs.get(key).unwrap(), key);
+        match std::env::var(key) {
+            Ok(_) => {
+                outf.write_all(format!("export {}={}:${}\n", key, envs.get(key).unwrap(), key).as_bytes()).unwrap();
+                log::debug!("export {}={}:${}", key, envs.get(key).unwrap(), key);
+            }
+            Err(_) => {
+                outf.write_all(format!("export {}={}\n", key, envs.get(key).unwrap()).as_bytes()).unwrap();
+                log::debug!("export {}={}", key, envs.get(key).unwrap());
+            }
+        }
     }
 }
